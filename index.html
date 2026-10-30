@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ben ik een bitch?</title>
+<meta name="description" content="Voor het weerbericht check je de app, voor jezelf mag dat ook. Doe de test.">
+<meta property="og:title" content="Ben ik een bitch?">
+<meta property="og:description" content="Voor het weerbericht check je de app, voor jezelf mag dat ook. Doe de test.">
+<meta property="og:url" content="https://www.benikeenbitch.nl/">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%85%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800;900&family=Inter:wght@400;500;600&display=swap">
+<style>
+  /* Layout: een gecentreerde kolom, een scherm per vraag, daarna een uitslagscherm. Stijl: crème, inkt, koraal en pastelvlakken met harde schaduwen. */
+  :root {
+    --bg: #FFFDF5;
+    --fg: #121212;
+    --muted: #5B574E;
+    --card: #FFFFFF;
+    --accent: #F2603A;
+    --accent-ink: #121212;
+    --btn-shadow: #121212;
+    --pink: #E796E3;
+    --sky: #A9DBF6;
+    --yellow: #FBF4A0;
+    --on-pastel: #121212;
+    --display: "Archivo", "Arial Black", Arial, sans-serif;
+    --body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121212;
+      --fg: #FFFDF5;
+      --muted: #B9B4A8;
+      --card: #1E1E1C;
+      --btn-shadow: #FFFDF5;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121212;
+    --fg: #FFFDF5;
+    --muted: #B9B4A8;
+    --card: #1E1E1C;
+    --btn-shadow: #FFFDF5;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--body);
+    font-size: 1rem;
+    line-height: 1.5;
+    padding-block: 20px 40px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .page { max-width: 44rem; margin: 0 auto; text-align: center; }
+  h1, h2, .brand, .option, .result-text, blockquote { overflow-wrap: break-word; }
+
+  .brand {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: clamp(2.5rem, 12vw, 4.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+  .brand span { color: var(--accent); }
+  .sub { margin: 0.9rem auto 0; max-width: 28rem; font-size: 1.0625rem; color: var(--muted); text-wrap: balance; }
+
+  .chip {
+    display: inline-block;
+    margin: 0;
+    padding: 0.3rem 0.85rem;
+    border: 2px solid var(--fg);
+    border-radius: 100px;
+    background: var(--card);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .view { margin-top: 1.75rem; animation: rise 0.28s ease-out; }
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  h1, h2 {
+    font-family: var(--display);
+    font-weight: 900;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+    margin: 1.1rem 0 1.5rem;
+  }
+  h1:focus, h2:focus { outline: none; }
+  .question { font-size: clamp(1.5rem, 6.2vw, 2.3rem); line-height: 1.08; }
+  .result-title { font-size: clamp(2.3rem, 10vw, 3.75rem); line-height: 0.95; letter-spacing: -0.045em; margin-bottom: 1rem; }
+  .result-title span { color: var(--accent); }
+
+  .options { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
+  .option {
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--fg);
+    background: var(--card);
+    border: 2px solid var(--fg);
+    border-radius: 24px;
+    padding: 1rem 1.25rem;
+    box-shadow: 4px 4px 0 var(--accent);
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .option:focus-visible, .again:focus-visible { outline: 3px solid var(--fg); outline-offset: 3px; }
+  .option:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--accent); }
+  @media (hover: hover) {
+    .option:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--accent); }
+    .option:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--accent); }
+  }
+
+  .result-text { margin: 0 auto; max-width: 30rem; font-size: 1.125rem; }
+
+  .erasmus {
+    margin: 2rem 0 0;
+    padding: 1.5rem 1.25rem 1.6rem;
+    border: 2px solid var(--on-pastel);
+    border-radius: 28px;
+    background: var(--tone);
+    color: var(--on-pastel);
+    box-shadow: 6px 6px 0 var(--accent);
+  }
+  .erasmus .chip { border-color: var(--on-pastel); background: #FFFDF5; color: var(--on-pastel); }
+  .erasmus blockquote {
+    margin: 1rem 0 0;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(1.5rem, 6vw, 2.1rem);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  .erasmus .latin { margin: 0.75rem 0 0; font-size: 0.95rem; font-style: italic; }
+  .erasmus cite { display: block; margin-top: 0.85rem; font-style: normal; font-weight: 600; font-size: 0.9rem; }
+
+  .again {
+    margin-top: 2rem;
+    font: inherit;
+    font-weight: 600;
+    color: var(--accent-ink);
+    background: var(--accent);
+    border: 2px solid var(--accent-ink);
+    border-radius: 100px;
+    padding: 0.8rem 1.6rem;
+    box-shadow: 4px 4px 0 var(--btn-shadow);
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .again:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--btn-shadow); }
+  @media (hover: hover) { .again:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--btn-shadow); } }
+
+  .foot { margin: 2.75rem 0 0; font-size: 0.875rem; color: var(--muted); }
+
+  @media (min-width: 640px) {
+    body { padding-block: 40px 56px; }
+    .view { margin-top: 2.25rem; }
+    .option { padding: 1.15rem 1.5rem; font-size: 1.0625rem; }
+    .erasmus { padding: 2rem 2rem 2.1rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .view { animation: none; }
+    .option, .again { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <p class="brand">Ben ik een <span>bitch?</span></p>
+    <p class="sub">Voor het weerbericht check je de app, voor jezelf mag dat ook. Het is niet erg, verandering begint bij inzicht.</p>
+  </header>
+  <main id="quiz"></main>
+  <p class="foot">Meten is weten. Gewoon voor je eigen rust.</p>
+</div>
+
+<script>
+(function () {
+  var QUESTIONS = [
+    { q: "Wat deed je toen je vandaag wakker werd?", a: [
+      { t: "Rustig opstaan, overzicht van de dag gemaakt, stevig ontbijt en gaan.", k: "directeur" },
+      { t: "Werd wakker met het gevoel dat er een vrachtwagen over mijn hoofd is gereden, maar koffie erin en gaan.", k: "bitch" },
+      { t: "Ik pak mijn telefoon en zie het al: vandaag ben ik ieders hulpje. Mijn eigen takenlijst mag nog een dagje stof pakken.", k: "kiezen" } ] },
+    { q: "Iemand appt: “Heb je even een minuutje?”", a: [
+      { t: "Een minuutje bestaat niet. Ik laat het lekker bij twee blauwe vinkjes.", k: "bitch" },
+      { t: "Ik bel direct. Vijf minuten, agenda erbij, klaar.", k: "directeur" },
+      { t: "Ik typ “tuurlijk” en vraag me daarna af waarom.", k: "kiezen" } ] },
+    { q: "Je team is verslagen door boeren in je eigen stadion. Hoe reageer je?", a: [
+      { t: "Ik post een meme op LinkedIn en blokkeer iedereen uit Emmen.", k: "bitch" },
+      { t: "Ik bel de trainer. Maandag staat er een evaluatie.", k: "directeur" },
+      { t: "Ik lach erom. Boeren mogen ook een goede dag hebben.", k: "kiezen" } ] }
+  ];
+
+  var RESULTS = {
+    bitch: {
+      pre: "Ja, vandaag een ", key: "bitch", post: ".", tone: "var(--pink)",
+      text: "Je laat je niet opjagen en je legt niets uit. Dat mag. Vandaag bepaal jij het tempo.",
+      quote: "Je hebt Sparta gekregen, maak er iets moois van.",
+      latin: "Spartam nactus es, hanc exorna."
+    },
+    directeur: {
+      pre: "Nee, vandaag de ", key: "directeur", post: ".", tone: "var(--sky)",
+      text: "Agenda vol, alles onder controle. Iedereen wacht op jouw besluit en jij hebt er al een.",
+      quote: "Haast je langzaam.",
+      latin: "Festina lente."
+    },
+    kiezen: {
+      pre: "Vandaag mag je ", key: "kiezen", post: ".", tone: "var(--yellow)",
+      text: "Je hebt van allebei wat. Bitch bij de koffieautomaat, directeur in de vergadering. Jij bepaalt welke kant het opgaat.",
+      quote: "Mensen worden niet geboren, maar gevormd.",
+      latin: "Homines non nascuntur, sed finguntur."
+    }
+  };
+
+  var root = document.getElementById("quiz");
+  var step = 0;
+  var score = { bitch: 0, directeur: 0, kiezen: 0 };
+
+  function el(tag, cls, text) {
+    var node = document.createElement(tag);
+    if (cls) node.className = cls;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  function shuffle(list) {
+    var a = list.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function winner(s) {
+    var max = Math.max(s.bitch, s.directeur, s.kiezen);
+    var top = Object.keys(s).filter(function (k) { return s[k] === max; });
+    return top.length === 1 ? top[0] : "kiezen";
+  }
+
+  function renderQuestion(moveFocus) {
+    var data = QUESTIONS[step];
+    var view = el("div", "view");
+
+    view.appendChild(el("p", "chip", "Vraag " + (step + 1) + " van " + QUESTIONS.length));
+
+    var h = el("h2", "question", data.q);
+    h.tabIndex = -1;
+    view.appendChild(h);
+
+    var list = el("ul", "options");
+    shuffle(data.a).forEach(function (ans) {
+      var li = el("li");
+      var btn = el("button", "option", ans.t);
+      btn.type = "button";
+      btn.addEventListener("click", function () { choose(ans.k); });
+      li.appendChild(btn);
+      list.appendChild(li);
+    });
+    view.appendChild(list);
+
+    root.replaceChildren(view);
+    if (moveFocus) h.focus({ preventScroll: true });
+  }
+
+  function choose(kind) {
+    score[kind] += 1;
+    step += 1;
+    if (step < QUESTIONS.length) renderQuestion(true);
+    else renderResult();
+  }
+
+  function renderResult() {
+    var r = RESULTS[winner(score)];
+    var view = el("div", "view");
+
+    view.appendChild(el("p", "chip", "Jouw uitslag"));
+
+    var h = el("h1", "result-title");
+    h.tabIndex = -1;
+    h.appendChild(document.createTextNode(r.pre));
+    h.appendChild(el("span", "", r.key));
+    h.appendChild(document.createTextNode(r.post));
+    view.appendChild(h);
+
+    view.appendChild(el("p", "result-text", r.text));
+
+    var fig = el("figure", "erasmus");
+    fig.style.setProperty("--tone", r.tone);
+    fig.appendChild(el("p", "chip", "Een woord van Erasmus"));
+    fig.appendChild(el("blockquote", "", r.quote));
+    fig.appendChild(el("p", "latin", r.latin));
+    fig.appendChild(el("cite", "", "Desiderius Erasmus"));
+    view.appendChild(fig);
+
+    var again = el("button", "again", "Nog een keer");
+    again.type = "button";
+    again.addEventListener("click", restart);
+    view.appendChild(again);
+
+    root.replaceChildren(view);
+    h.focus({ preventScroll: true });
+  }
+
+  function restart() {
+    step = 0;
+    score = { bitch: 0, directeur: 0, kiezen: 0 };
+    renderQuestion(true);
+  }
+
+  renderQuestion(false);
+})();
+</script>
+</body>
+</html>
